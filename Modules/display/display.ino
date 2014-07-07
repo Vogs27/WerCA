@@ -102,6 +102,7 @@ void setup()   {
   display.drawBitmap(26, 20, logo33_glcd_bmp, 32 , 32, BLACK);
   display.display();
   messages(random(19));
+  delay(2000);
 }
 
 
