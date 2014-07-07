@@ -206,7 +206,6 @@ void loop() {
 
 void messages(int numbmsg){
   if (numbmsg != 0){
-    lastRow = 0;
     display.drawBitmap(0, rowStartY[lastRow], msg716, 16, 7, BLACK);
     display.setCursor(18, rowStartY[lastRow]);
     display.print(numbmsg);
