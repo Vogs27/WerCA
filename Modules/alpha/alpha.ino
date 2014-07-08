@@ -18,7 +18,7 @@
 // pin 4 - LCD chip select (CS)
 // pin 3 - LCD reset (RST)
 
-Adafruit_PCD8544 display = Adafruit_PCD8544(7, 6, 5, 4, 3);
+Adafruit_PCD8544 display = Adafruit_PCD8544(7, 6, 5, 10, 3);
 
 //Some variables for display:
 static const unsigned char logo32[] = 
@@ -573,7 +573,7 @@ void loop() {
   #endif
   */
 switch(ELP_data[0]){
-  case B:
+  case 'B':
     display.drawBitmap(0, 11, incoming2216, 16, 22, BLACK);
     display.setCursor(0, 35);
     display.println("Incoming call");
@@ -584,18 +584,18 @@ switch(ELP_data[0]){
       display.print(VSP[4]);
     } */
     break;
-  case C:
+  case 'C':
     digitalWrite(sleepPin, HIGH);
   default: //l'ordine di chiamata delle seguenti funioni determina la loro priorità di visualizzazione sul display
     messages(ELP_data[1]);
-    calls(ELP_data[2];);
-    mail(ELP_data[3];);
-    oth(ELP_data[4];);
+    calls(ELP_data[2]);
+    mail(ELP_data[3]);
+    oth(ELP_data[4]);
     lastRow = 0;
     break;
   }
   for(int i = 0; i <= 6; i++){
-    VSP[i] = 0;
+    ELP_data[i] = 0;
   }
   delay(100);
 }
