@@ -72,15 +72,15 @@ static int ledRosso = 6;
 char ELP_data[20];
 unsigned char ore;
 unsigned char minuti;
-unsigned char num_sms = 0;
-unsigned char num_calls = 0;
-unsigned char num_email = 0;
-unsigned char num_other = 0;
+char num_sms = '0';
+char num_calls = '0';
+char num_email = '0';
+char num_other = '0';
 char incoming_number[15];
 char incoming_name[16];
-unsigned char phone_battery;
-unsigned char werca_battery;
-unsigned char mode;
+char phone_battery;
+char werca_battery;
+char mode;
 
 
 /* Define how assert should function in the BLE library */
@@ -409,9 +409,9 @@ void aci_loop()
             display.setCursor(12, 8);
             display.print("SMS       ");
             display.print(num_sms);
-            display.print("Chiamate  ");
+            display.print("\n  Chiamate  ");
             display.print(num_calls);
-            display.print("Email      ");
+            display.print("\n  Email     ");
             display.print(num_email);
             display.display();
             
