@@ -10,6 +10,7 @@ Changelog: nuovo protocollo
 #include <lib_aci.h>
 #include <aci_setup.h>
 #include "uart_over_ble.h"
+#include "icons.h"
 
 //Put the nRF8001 setup in the RAM of the nRF8001.
 #include "services.h"
@@ -45,6 +46,8 @@ static uart_over_ble_t uart_over_ble;
 static uint8_t         uart_buffer[20];
 static uint8_t         uart_buffer_len = 0;
 static uint8_t         dummychar = 0;
+
+
 
 //DISPLAY
 #include <Adafruit_GFX.h>
@@ -93,20 +96,25 @@ void __ble_assert(const char *file, uint16_t line)
 
 void setup(void)
 {
-  Serial.begin(115200);
+  Serial.begin(19200);
   Serial.println(F("WerCA pre-nighly 0.1"));
   Serial.println(F("Test firmware with BLE"));
   display.begin();
+  delay(50);
   Serial.println("Display acceso");
   display.clearDisplay();
   display.setContrast(25);
   display.setTextSize(1);              
   display.setTextColor(BLACK);
-  display.setCursor(9, 0);
+  display.setCursor(10, 0);
   display.println("CodeATLAS");
   display.setCursor(12, 8);
   display.println("WerCA 0.1");
   Serial.println("Display scritto");
+  delay(200);
+  display.drawBitmap(20, 26, logo32, 32, 32, BLACK);
+  display.display();
+  delay(50);
   
   Serial.println(F("Doing nRF setup"));  
  /**
