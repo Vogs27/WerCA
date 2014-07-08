@@ -50,6 +50,20 @@ char VSP_data[20];
 static int ledVerde = 7;
 static int ledRosso = 6;
 
+//Implementazioni variabili ELP
+unsigned char ore;
+unsigned char minuti;
+unsigned char num_sms;
+unsigned char num_calls;
+unsigned char num_email;
+unsigned char num_notifications;
+char incoming_number[15];
+char incoming_name[16];
+unsigned char phone_battery;
+unsigned char werca_battery;
+unsigned char mode;
+
+
 /* Define how assert should function in the BLE library */
 void __ble_assert(const char *file, uint16_t line)
 {
