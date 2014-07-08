@@ -1,7 +1,8 @@
 /*
-WerCa OS pre-nightly 0.0000001
+WerCa OS pre-nightly 0.0000002
 LED su PIN6 e PIN7
 
+Changelog: nuovo protocollo
 */
 
 //Including BLE libraries
@@ -51,12 +52,13 @@ static int ledVerde = 7;
 static int ledRosso = 6;
 
 //Implementazioni variabili ELP
+char ELP_data[20];
 unsigned char ore;
 unsigned char minuti;
-unsigned char num_sms;
-unsigned char num_calls;
-unsigned char num_email;
-unsigned char num_notifications;
+unsigned char num_sms = 0;
+unsigned char num_calls = 0;
+unsigned char num_email = 0;
+unsigned char num_other = 0;
 char incoming_number[15];
 char incoming_name[16];
 unsigned char phone_battery;
@@ -340,39 +342,35 @@ void aci_loop()
             {
               Serial.print((char)aci_evt->params.data_received.rx_data.aci_data[i]);
               uart_buffer[i] = aci_evt->params.data_received.rx_data.aci_data[i];
-              VSP_data[i] = aci_evt->params.data_received.rx_data.aci_data[i]; //CREA BUFFER VSP
+              ELP_data[i] = aci_evt->params.data_received.rx_data.aci_data[i]; //CREA BUFFER VSP
               
               
               Serial.print(F(" "));
             }
             
-            //LED TEST
-            if(VSP_data[0] == '1')
-              {
-                digitalWrite(ledVerde, HIGH);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-              else if(VSP_data[0] == '0')
-              {
-                digitalWrite(ledVerde, LOW);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-              if(VSP_data[1] == '1')
-              {
-                digitalWrite(ledRosso, HIGH);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-              else if(VSP_data[1] == '0')
-              {
-                digitalWrite(ledRosso, LOW);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-            Serial.println("VSP data:");
-            for(int i=0; i<20; i++)
+ 
+            //LETTURA ELP_data
+            switch(ELP_data[0])
             {
-              Serial.println(VSP_data[i]);
+              case 'A':  //NOTIFICHE
+              num_sms = ELP_data[1];
+              num_calls = ELP_data[2];
+              num_email = ELP_data[3];
+              num_other = ELP_data[4];
+              break;
+              
+              default:
+              Serial.println(F("Non lo so"));
+              break;
             }
             
+            Serial.println(F("SMS,chiamate,email"));
+            Serial.print(num_sms);
+            Serial.print(F(" , "));
+            Serial.print(num_calls);
+            Serial.print(F(" , "));
+            Serial.print(num_email);
+            Serial.print(F(" , "));
             
             uart_buffer_len = aci_evt->len - 2;
             Serial.println(F(""));
@@ -460,7 +458,34 @@ void loop() {
 
   //Process any ACI commands or events
   aci_loop();
-/*
+  
+             /*LED TEST
+            if(VSP_data[0] == '1')
+              {
+                digitalWrite(ledVerde, HIGH);
+                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
+              }
+              else if(VSP_data[0] == '0')
+              {
+                digitalWrite(ledVerde, LOW);
+                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
+              }
+              if(VSP_data[1] == '1')
+              {
+                digitalWrite(ledRosso, HIGH);
+                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
+              }
+              else if(VSP_data[1] == '0')
+              {
+                digitalWrite(ledRosso, LOW);
+                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
+              }
+            Serial.println("VSP data:");
+            for(int i=0; i<20; i++)
+            {
+              Serial.println(VSP_data[i]);
+            }
+
 if(VSP_data)
 {
   Serial.println(VSP_data);
