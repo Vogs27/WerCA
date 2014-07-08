@@ -46,6 +46,20 @@ static uint8_t         uart_buffer[20];
 static uint8_t         uart_buffer_len = 0;
 static uint8_t         dummychar = 0;
 
+//DISPLAY
+#include <Adafruit_GFX.h>
+#include <Adafruit_PCD8544.h>
+
+
+// Software SPI:
+// pin 7 - Serial clock out (SCLK)
+// pin 6 - Serial data out (DIN)
+// pin 5 - Data/Command select (D/C)
+// pin 10 - LCD chip select (CS)
+// pin 3 - LCD reset (RST)
+
+Adafruit_PCD8544 display = Adafruit_PCD8544(7, 6, 5, 10, 3);
+
 //VARIABILI NOSTRE
 char VSP_data[20];
 static int ledVerde = 7;
@@ -82,9 +96,17 @@ void setup(void)
   Serial.begin(115200);
   Serial.println(F("WerCA pre-nighly 0.1"));
   Serial.println(F("Test firmware with BLE"));
-  
-  pinMode(ledVerde, OUTPUT);    
-  pinMode(ledRosso, OUTPUT);
+  display.begin();
+  Serial.println("Display acceso");
+  display.clearDisplay();
+  display.setContrast(25);
+  display.setTextSize(1);              
+  display.setTextColor(BLACK);
+  display.setCursor(9, 0);
+  display.println("CodeATLAS");
+  display.setCursor(12, 8);
+  display.println("WerCA 0.1");
+  Serial.println("Display scritto");
   
   Serial.println(F("Doing nRF setup"));  
  /**
