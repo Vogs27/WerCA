@@ -112,7 +112,7 @@ void setup(void)
   display.println("WerCA 0.1");
   Serial.println("Display scritto");
   delay(200);
-  display.drawBitmap(20, 26, logo32, 32, 32, BLACK);
+  //display.drawBitmap(20, 26, logo32, 32, 32, BLACK);
   display.display();
   delay(50);
   
@@ -394,13 +394,26 @@ void aci_loop()
               break;
             }
             
-            Serial.println(F("SMS,chiamate,email"));
+            /*Serial.println(F("SMS,chiamate,email"));
             Serial.print(num_sms);
             Serial.print(F(" , "));
             Serial.print(num_calls);
             Serial.print(F(" , "));
             Serial.print(num_email);
             Serial.print(F(" , "));
+            */
+            
+            display.clearDisplay();
+            display.setContrast(25);
+            display.setTextSize(1);
+            display.setCursor(12, 8);
+            display.print("SMS       ");
+            display.print(num_sms);
+            display.print("Chiamate  ");
+            display.print(num_calls);
+            display.print("Email      ");
+            display.print(num_email);
+            display.display();
             
             uart_buffer_len = aci_evt->len - 2;
             Serial.println(F(""));
