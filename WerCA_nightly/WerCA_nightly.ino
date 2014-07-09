@@ -82,6 +82,9 @@ char phone_battery;
 char werca_battery;
 char mode;
 
+boolean gotCallerID = false;
+boolean gotCallerNum = false;
+
 
 /* Define how assert should function in the BLE library */
 void __ble_assert(const char *file, uint16_t line)
@@ -403,17 +406,37 @@ void aci_loop()
               break;
               
               case 'B':  //Chiamata in arrivo
-              display.clearDisplay();
-              display.setCursor(2, 40);
               for(int i=1; i<16; i++){
-                display.print(ELP_data[i]);
+                incoming_number[i-1]=ELP_data[i];
               }
-              display.display();
+              gotCallerNum = true;
+              break;
+              
+              case 'C':  //ID chiamante
+              for(int i=1; i<=16; i++){
+                incoming_name[i-1]=ELP_data[i];
+              }
+              gotCallerID = true;
               break;
               
               default:
               Serial.println(F("Non lo so"));
               break;
+            }
+            
+            memset(ELP_data,0,sizeof(ELP_data));
+            
+            if(gotCallerNum && gotCallerID){
+              display.clearDisplay();
+              display.setCursor(2,22);
+              display.print(F("Incoming call:"));
+              display.setCursor(2,31);
+              display.print(incoming_name);
+              display.setCursor(0,40);
+              display.print(incoming_number);
+              display.display();
+              gotCallerNum = false;
+              gotCallerID = false;
             }
             
             /*Serial.println(F("SMS,chiamate,email"));
