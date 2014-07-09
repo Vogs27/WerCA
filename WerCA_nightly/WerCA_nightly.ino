@@ -387,6 +387,28 @@ void aci_loop()
               num_calls = ELP_data[2];
               num_email = ELP_data[3];
               num_other = ELP_data[4];
+              
+              display.clearDisplay();
+            display.setContrast(25);
+            display.setTextSize(1);
+            display.setCursor(12, 8);
+            display.print("SMS       ");
+            display.print(num_sms);
+            display.print("\n  Chiamate  ");
+            display.print(num_calls);
+            display.print("\n  Email     ");
+            display.print(num_email);
+            display.display();
+            
+              break;
+              
+              case 'B':  //Chiamata in arrivo
+              display.clearDisplay();
+              display.setCursor(2, 40);
+              for(int i=1; i<16; i++){
+                display.print(ELP_data[i]);
+              }
+              display.display();
               break;
               
               default:
@@ -403,17 +425,6 @@ void aci_loop()
             Serial.print(F(" , "));
             */
             
-            display.clearDisplay();
-            display.setContrast(25);
-            display.setTextSize(1);
-            display.setCursor(12, 8);
-            display.print("SMS       ");
-            display.print(num_sms);
-            display.print("\n  Chiamate  ");
-            display.print(num_calls);
-            display.print("\n  Email     ");
-            display.print(num_email);
-            display.display();
             
             uart_buffer_len = aci_evt->len - 2;
             Serial.println(F(""));
