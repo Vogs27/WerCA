@@ -328,6 +328,10 @@ void aci_loop()
         timing_change_done              = false;
         aci_state.data_credit_available = aci_state.data_credit_total;
 
+
+        display.clearDisplay();
+        display.println(F("Connesso al telefono"));
+        display.display();
         /*
         Get the device version of the nRF8001 and store it in the Hardware Revision String
         */
@@ -428,6 +432,7 @@ void aci_loop()
             
             if(gotCallerNum && gotCallerID){
               display.clearDisplay();
+              display.drawBitmap(33, 0, incoming2216, 16, 22, BLACK);
               display.setCursor(2,22);
               display.print(F("Incoming call:"));
               display.setCursor(2,31);
