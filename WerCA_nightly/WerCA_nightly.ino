@@ -115,7 +115,7 @@ void setup(void)
   display.println("WerCA 0.1");
   Serial.println("Display scritto");
   delay(200);
-  //display.drawBitmap(20, 26, logo32, 32, 32, BLACK);
+  display.drawBitmap(20, 20, logo32, 32, 32, BLACK);
   display.display();
   delay(50);
   
