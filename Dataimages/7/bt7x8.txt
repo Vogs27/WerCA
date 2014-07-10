@@ -1,0 +1,13 @@
+
+	B00011000, //    ##
+	B10010010, // #  #  #
+	B01010100, //  # # #
+	B00110000, //   ##
+	B01010100, //  # # #
+	B10010010, // #  #  #
+	B00011000, //    ##
+	
+
+//Spiacente, non si pù creare un logo bt decente con queste misure, prova a guardare quello 7x8 o 11x8 o 9x8...
+
+//7x8 =hxl

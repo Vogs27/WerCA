@@ -1,0 +1,17 @@
+const uint_8 bT8x10Bitmaps =
+{
+	B00010000, //    #  
+	B00011000, //    ##  
+	B10010100, // #  # # 
+	B01010010, //  # #  #
+	B00110100, //   ## # 
+	B00011000, //    ##  
+	B00110100, //   ## # 
+	B01010010, //  # #  #
+	B01010100, //  # # # 
+	B10011000, // #  ##  
+	B00010000, //    #   
+};
+
+//11x8 = hxl
+//Spiacente, non si pù creare un logo bt decente con queste misure, prova a guardare quello 7x8 o 11x8 o 9x8...
