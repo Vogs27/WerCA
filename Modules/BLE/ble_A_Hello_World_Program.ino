@@ -1,25 +1,80 @@
-/*
-WerCa OS pre-nightly 0.0000002
-LED su PIN6 e PIN7
+/* Copyright (c) 2014, Nordic Semiconductor ASA
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
-Changelog: nuovo protocollo
-*/
 
-//Including BLE libraries
+/** @defgroup ble_uart_project_template ble_uart_project_template
+@{
+@ingroup projects
+@brief Empty project that can be used as a template for new projects.
+
+@details
+This project is a firmware template for new projects.
+The project will run correctly in its current state.
+It can send data on the UART TX characteristic
+It can receive data on the UART RX characteristic.
+With this project you have a starting point for adding your own application functionality.
+
+The following instructions describe the steps to be made on the Windows PC:
+
+  -# Install the Master Control Panel on your computer. Connect the Master Emulator
+    (nRF2739) and make sure the hardware drivers are installed.
+
+  -# You can use the nRF UART app in the Apple iOS app store and Google Play for Android 4.3 for Samsung Galaxy S4
+    with this UART template app
+
+  -# You can send data from the Arduino serial monitor, maximum length of a string is 19 bytes
+    Set the line ending to "Newline" in the Serial monitor (The newline is also sent over the air
+
+ *
+ * Click on the "Serial Monitor" button on the Arduino IDE to reset the Arduino and start the application.
+ * The setup() function is called first and is called only once for each reset of the Arduino.
+ * The loop() function as the name implies is called in a loop.
+ *
+ * The setup() and loop() function are called in this way.
+ * main()
+ *  {
+ *   setup();
+ *   while(1)
+ *   {
+ *     loop();
+ *   }
+ * }
+ *
+ */
 #include <SPI.h>
 #include <lib_aci.h>
 #include <aci_setup.h>
 #include "uart_over_ble.h"
-#include "icons.h"
 
-//Put the nRF8001 setup in the RAM of the nRF8001.
+/**
+Put the nRF8001 setup in the RAM of the nRF8001.
+*/
 #include "services.h"
-
 /**
 Include the services_lock.h to put the setup in the OTP memory of the nRF8001.
 This would mean that the setup cannot be changed once put in.
 However this removes the need to do the setup of the nRF8001 on every reset.
 */
+
+
 #ifdef SERVICES_PIPE_TYPE_MAPPING_CONTENT
     static services_pipe_type_mapping_t
         services_pipe_type_mapping[NUMBER_OF_PIPES] = SERVICES_PIPE_TYPE_MAPPING_CONTENT;
@@ -31,12 +86,28 @@ However this removes the need to do the setup of the nRF8001 on every reset.
 /* Store the setup for the nRF8001 in the flash of the AVR to save on RAM */
 static hal_aci_data_t setup_msgs[NB_SETUP_MESSAGES] PROGMEM = SETUP_MESSAGES_CONTENT;
 
-static struct aci_state_t aci_state;  //see BLE documentation
+// aci_struct that will contain
+// total initial credits
+// current credit
+// current state of the aci (setup/standby/active/sleep)
+// open remote pipe pending
+// close remote pipe pending
+// Current pipe available bitmap
+// Current pipe closed bitmap
+// Current connection interval, slave latency and link supervision timeout
+// Current State of the the GATT client (Service Discovery)
+// Status of the bond (R) Peer address
+static struct aci_state_t aci_state;
 
-//Temporary buffers for sending ACI commands
+/*
+Temporary buffers for sending ACI commands
+*/
 static hal_aci_evt_t  aci_data;
+//static hal_aci_data_t aci_cmd;
 
-//Timing change state variable
+/*
+Timing change state variable
+*/
 static bool timing_change_done          = false;
 
 /*
@@ -47,43 +118,10 @@ static uint8_t         uart_buffer[20];
 static uint8_t         uart_buffer_len = 0;
 static uint8_t         dummychar = 0;
 
-
-
-//DISPLAY
-#include <Adafruit_GFX.h>
-#include <Adafruit_PCD8544.h>
-
-
-// Software SPI:
-// pin 7 - Serial clock out (SCLK)
-// pin 6 - Serial data out (DIN)
-// pin 5 - Data/Command select (D/C)
-// pin 10 - LCD chip select (CS)
-// pin 3 - LCD reset (RST)
-
-Adafruit_PCD8544 display = Adafruit_PCD8544(7, 6, 5, 10, 3);
-
-//VARIABILI NOSTRE
-char VSP_data[20];
-static int ledVerde = 7;
-static int ledRosso = 6;
-
-//Implementazioni variabili ELP
-char ELP_data[20];
-char time[5];
-char num_sms = '0';
-char num_calls = '0';
-char num_email = '0';
-char num_other = '0';
-char incoming_number[15];
-char incoming_name[16];
-char phone_battery;
-char werca_battery;
-char mode;
-
-boolean gotCallerID = false;
-boolean gotCallerNum = false;
-
+/*
+Initialize the radio_ack. This is the ack received for every transmitted packet.
+*/
+//static bool radio_ack_pending = false;
 
 /* Define how assert should function in the BLE library */
 void __ble_assert(const char *file, uint16_t line)
@@ -95,31 +133,36 @@ void __ble_assert(const char *file, uint16_t line)
   Serial.print("\n");
   while(1);
 }
+/*
+Description:
 
+In this template we are using the BTLE as a UART and can send and receive packets.
+The maximum size of a packet is 20 bytes.
+When a command it received a response(s) are transmitted back.
+Since the response is done using a Notification the peer must have opened it(subscribed to it) before any packet is transmitted.
+The pipe for the UART_TX becomes available once the peer opens it.
+See section 20.4.1 -> Opening a Transmit pipe
+In the master control panel, clicking Enable Services will open all the pipes on the nRF8001.
+
+The ACI Evt Data Credit provides the radio level ack of a transmitted packet.
+*/
 void setup(void)
 {
-  Serial.begin(19200);
-  Serial.println(F("WerCA pre-nighly 0.1"));
-  Serial.println(F("Test firmware with BLE"));
-  display.begin();
-  delay(50);
-  Serial.println("Display acceso");
-  display.clearDisplay();
-  display.setContrast(25);
-  display.setTextSize(1);              
-  display.setTextColor(BLACK);
-  display.setCursor(10, 0);
-  display.println("CodeATLAS");
-  display.setCursor(12, 8);
-  display.println("WerCA 0.1");
-  Serial.println("Display scritto");
-  delay(200);
-  display.drawBitmap(20, 20, logo32, 32, 32, BLACK);
-  display.display();
-  delay(50);
-  
-  Serial.println(F("Doing nRF setup"));  
- /**
+  Serial.begin(115200);
+  //Wait until the serial port is available (useful only for the Leonardo)
+  //As the Leonardo board is not reseted every time you open the Serial Monitor
+  #if defined (__AVR_ATmega32U4__)
+    while(!Serial)
+    {}
+    delay(5000);  //5 seconds delay for enabling to see the start up comments on the serial board
+  #elif defined(__PIC32MX__)
+    delay(1000);
+  #endif
+
+  Serial.println(F("Arduino setup"));
+  Serial.println(F("Set line ending to newline to send data from the serial monitor"));
+
+  /**
   Point ACI data structures to the the setup data that the nRFgo studio generated for the nRF8001
   */
   if (NULL != services_pipe_type_mapping)
@@ -133,8 +176,8 @@ void setup(void)
   aci_state.aci_setup_info.number_of_pipes    = NUMBER_OF_PIPES;
   aci_state.aci_setup_info.setup_msgs         = setup_msgs;
   aci_state.aci_setup_info.num_setup_msgs     = NB_SETUP_MESSAGES;
-  
-/*
+
+  /*
   Tell the ACI library, the MCU to nRF8001 pin connections.
   The Active pin is optional and can be marked UNUSED
   */
@@ -145,8 +188,9 @@ void setup(void)
   aci_state.aci_pins.miso_pin   = MISO;
   aci_state.aci_pins.sck_pin    = SCK;
 
-  aci_state.aci_pins.spi_clock_divider      = SPI_CLOCK_DIV16;  //SPI_CLOCK_DIV8  = 2MHz SPI speed (DOESN'T WORK)
-                                                                //SPI_CLOCK_DIV16 = 1MHz SPI speed 
+  aci_state.aci_pins.spi_clock_divider      = SPI_CLOCK_DIV8;//SPI_CLOCK_DIV8  = 2MHz SPI speed
+                                                             //SPI_CLOCK_DIV16 = 1MHz SPI speed
+  
   aci_state.aci_pins.reset_pin              = 4; //4 for Nordic board, UNUSED for REDBEARLAB_SHIELD_V1_1
   aci_state.aci_pins.active_pin             = UNUSED;
   aci_state.aci_pins.optional_chip_sel_pin  = UNUSED;
@@ -154,6 +198,10 @@ void setup(void)
   aci_state.aci_pins.interface_is_interrupt = false; //Interrupts still not available in Chipkit
   aci_state.aci_pins.interrupt_number       = 1;
 
+  //We reset the nRF8001 here by toggling the RESET line connected to the nRF8001
+  //If the RESET line is not available we call the ACI Radio Reset to soft reset the nRF8001
+  //then we initialize the data structures required to setup the nRF8001
+  //The second parameter is for turning debug printing on for the ACI Commands and Events so they be printed on the Serial
   lib_aci_init(&aci_state, false);
   Serial.println(F("Set up done"));
 }
@@ -327,12 +375,6 @@ void aci_loop()
         timing_change_done              = false;
         aci_state.data_credit_available = aci_state.data_credit_total;
 
-
-        display.clearDisplay();
-        display.drawBitmap(0, 0, BT_8x9, 8, 9, BLACK);
-        display.setCursor(0,11);
-        display.println(F("Connesso al\ntelefono"));
-        display.display();
         /*
         Get the device version of the nRF8001 and store it in the Hardware Revision String
         */
@@ -347,7 +389,7 @@ void aci_loop()
                                             // Used to increase or decrease bandwidth
           timing_change_done = true;
 
-          char hello[]="Connessione stabilita";
+          char hello[]="Hello World, works";
           uart_tx((uint8_t *)&hello[0], strlen(hello));
           Serial.print(F("Sending :"));
           Serial.println(hello);
@@ -365,10 +407,6 @@ void aci_loop()
       case ACI_EVT_DISCONNECTED:
         Serial.println(F("Evt Disconnected/Advertising timed out"));
         lib_aci_connect(0/* in seconds  : 0 means forever */, 0x0050 /* advertising interval 50ms*/);
-        
-        display.clearDisplay();
-        display.setCursor(0,8);
-        display.println(F("DISCONNESSO\nRiconnettere\nil telefono"));
         Serial.println(F("Advertising started. Tap Connect on the nRF UART app"));
         break;
 
@@ -384,100 +422,8 @@ void aci_loop()
             {
               Serial.print((char)aci_evt->params.data_received.rx_data.aci_data[i]);
               uart_buffer[i] = aci_evt->params.data_received.rx_data.aci_data[i];
-              ELP_data[i] = aci_evt->params.data_received.rx_data.aci_data[i]; //CREA BUFFER VSP
-              
-              
               Serial.print(F(" "));
             }
-            
- 
-            //LETTURA ELP_data
-            switch(ELP_data[0])
-            {
-              case 'A':  //NOTIFICHE
-                num_sms = ELP_data[1];
-                num_calls = ELP_data[2];
-                num_email = ELP_data[3];
-                num_other = ELP_data[4];
-                
-                //SALVA LE ORE
-                for(int i=0; i<=5; i++){
-                  time[i] = ELP_data[i+10];
-                }
-                
-                display.clearDisplay();
-                display.setContrast(25);
-                display.setTextSize(1);
-                
-                //Visualizza ore
-                display.setCursor(54,0);
-                display.print(time);
-                
-                display.drawBitmap(0, 12, icon_phone_16, 16, 16, BLACK);
-                display.drawBitmap(22, 12, icon_sms_16, 16, 16, BLACK);
-                display.drawBitmap(44, 12, icon_email_16, 16, 16, BLACK);
-                display.drawBitmap(66, 12, icon_web_16, 16, 16, BLACK);
-                
-                display.display();
-                
-                /*
-                display.setCursor(12, 8);
-                display.print("SMS       ");
-                display.print(num_sms);
-                display.print("\n  Chiamate  ");
-                display.print(num_calls);
-                display.print("\n  Email     ");
-                display.print(num_email);
-                display.display();
-                */
-                
-              break;
-              
-              case 'B':  //Chiamata in arrivo
-              for(int i=1; i<16; i++){
-                incoming_number[i-1]=ELP_data[i];
-              }
-              gotCallerNum = true;
-              break;
-              
-              case 'C':  //ID chiamante
-              for(int i=1; i<=16; i++){
-                incoming_name[i-1]=ELP_data[i];
-              }
-              gotCallerID = true;
-              break;
-              
-              default:
-              Serial.println(F("Non lo so"));
-              break;
-            }
-            
-            memset(ELP_data,0,sizeof(ELP_data));
-            
-            if(gotCallerNum && gotCallerID){
-              display.clearDisplay();
-              display.drawBitmap(33, 0, incoming_16x22, 16, 22, BLACK);
-              display.setCursor(2,22);
-              display.print(F("Incoming call:"));
-              display.setCursor(2,31);
-              display.print(incoming_name);
-              display.setCursor(0,40);
-              display.print(incoming_number);
-              display.display();
-              gotCallerNum = false;
-              gotCallerID = false;
-            }
-            
-            /*Serial.println(F("SMS,chiamate,email"));
-            Serial.print(num_sms);
-            Serial.print(F(" , "));
-            Serial.print(num_calls);
-            Serial.print(F(" , "));
-            Serial.print(num_email);
-            Serial.print(F(" , "));
-            */
-            
-            
             uart_buffer_len = aci_evt->len - 2;
             Serial.println(F(""));
             if (lib_aci_is_pipe_available(&aci_state, PIPE_UART_OVER_BTLE_UART_TX_TX))
@@ -564,39 +510,7 @@ void loop() {
 
   //Process any ACI commands or events
   aci_loop();
-  
-             /*LED TEST
-            if(VSP_data[0] == '1')
-              {
-                digitalWrite(ledVerde, HIGH);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-              else if(VSP_data[0] == '0')
-              {
-                digitalWrite(ledVerde, LOW);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-              if(VSP_data[1] == '1')
-              {
-                digitalWrite(ledRosso, HIGH);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-              else if(VSP_data[1] == '0')
-              {
-                digitalWrite(ledRosso, LOW);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-            Serial.println("VSP data:");
-            for(int i=0; i<20; i++)
-            {
-              Serial.println(VSP_data[i]);
-            }
 
-if(VSP_data)
-{
-  Serial.println(VSP_data);
-}
-*/
   // print the string when a newline arrives:
   if (stringComplete) 
   {
@@ -669,4 +583,3 @@ void serialEvent() {
     }
   }
 }
-

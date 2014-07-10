@@ -34,7 +34,7 @@ static uint8_t logo32[] PROGMEM =
   B00000000, B01111000, B00000000, B00000000, //          ####                  
 };
 
-static uint8_t phone78[] PROGMEM = 
+static uint8_t icon_phone_8x7[] PROGMEM = 
 {
   B11100000, // ###     
   B11110000, // ####
@@ -45,7 +45,20 @@ static uint8_t phone78[] PROGMEM =
   B00001111, //     ####
 };
 
-static uint8_t mail710[] PROGMEM = 
+
+//CHIAMATE PERSE
+static uint8_t icon_phone_16[] PROGMEM = { 12, 6, 28, 6, 62, 6, 126, 6, 126, 6, 120, 6, 112, 0, 48, 6, 56, 6, 56, 0, 28, 0, 30, 112, 15, 240, 7, 248, 3, 248, 1, 240};
+
+//EMAIL
+static uint8_t icon_email_16[] PROGMEM = { 0, 0, 0, 0, 0, 0, 255, 255, 224, 7, 176, 13, 152, 25, 140, 49, 134, 97, 155, 217, 177, 141, 224, 7, 192, 3, 255, 255, 0, 0, 0, 0};
+
+//SMS
+static uint8_t icon_sms_16[] PROGMEM = { 0, 0, 0, 0, 255, 254, 255, 254, 139, 162, 185, 46, 138, 162, 235, 186, 139, 162, 255, 254, 255, 254, 60, 0, 56, 0, 48, 0, 32, 0, 0, 0};
+
+//CHIOCCIOLA
+static uint8_t icon_web_16[] PROGMEM = { 7, 240, 31, 248, 56, 28, 112, 14, 103, 247, 207, 243, 206, 115, 204, 115, 220, 115, 204, 115, 206, 255, 103, 254, 115, 128, 56, 16, 31, 240, 15, 224};
+/*
+static uint8_t icon_mail_16x7[] PROGMEM = 
 {
   B11111111, B11111111,  //################
   B11000000, B00000011,  //##            ##
@@ -56,7 +69,7 @@ static uint8_t mail710[] PROGMEM =
   B11111111, B11111111,  //################
 };
 
-static uint8_t msg716[] PROGMEM = 
+static uint8_t icon_SMS_16x7[] PROGMEM = 
 {
   B11111111, B11111111, // ################
   B11111111, B11111111, // ################
@@ -67,7 +80,7 @@ static uint8_t msg716[] PROGMEM =
   B00010000, B00000000, //    #
 };
 
-static uint8_t oth714[] PROGMEM = 
+static uint8_t icon_oth_16x7[] PROGMEM = 
 {
   B00000000, B00000000, //
   B00000000, B00000000, //
@@ -77,8 +90,9 @@ static uint8_t oth714[] PROGMEM =
   B00000000, B00000000, //
   B00000000, B00000000, //
 };
+*/
 
-static uint8_t incoming2216[] PROGMEM =
+static uint8_t incoming_16x22[] PROGMEM =
 {
   B00011000, B00000000, //    ##           
   B00111100, B00000000, //   ####          
@@ -104,3 +118,15 @@ static uint8_t incoming2216[] PROGMEM =
   B00000000, B00011100, //            ###  
 };
 
+static uint8_t BT_8x9[] PROGMEM =
+{
+	B00011000, //    ##  
+	B10010100, // #  # # 
+	B01010010, //  # #  #
+	B00110100, //   ## # 
+	B00011000, //    ##  
+	B00110100, //   ## # 
+	B01010010, //  # #  #
+	B10010100, // #  # # 
+	B00011000, //    ##   
+};
