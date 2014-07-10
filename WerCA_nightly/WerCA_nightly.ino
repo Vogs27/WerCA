@@ -71,10 +71,10 @@ static int ledRosso = 6;
 //Implementazioni variabili ELP
 char ELP_data[20];
 char time[5];
-char num_sms = '0';
-char num_calls = '0';
-char num_email = '0';
-char num_other = '0';
+int num_sms = '0';
+int num_calls = '0';
+int num_email = '0';
+int num_other = '0';
 char incoming_number[15];
 char incoming_name[16];
 char phone_battery;
@@ -395,10 +395,10 @@ void aci_loop()
             switch(ELP_data[0])
             {
               case 'A':  //NOTIFICHE
-                num_sms = ELP_data[1];
-                num_calls = ELP_data[2];
-                num_email = ELP_data[3];
-                num_other = ELP_data[4];
+                num_sms = ELP_data[1] - '0';
+                num_calls = ELP_data[2] - '0';
+                num_email = ELP_data[3] - '0';
+                num_other = ELP_data[4] - '0';
                 
                 //SALVA LE ORE
                 for(int i=0; i<=5; i++){
@@ -413,24 +413,37 @@ void aci_loop()
                 display.setCursor(54,0);
                 display.print(time);
                 
-                display.drawBitmap(0, 12, icon_phone_16, 16, 16, BLACK);
-                display.drawBitmap(22, 12, icon_sms_16, 16, 16, BLACK);
-                display.drawBitmap(44, 12, icon_email_16, 16, 16, BLACK);
-                display.drawBitmap(66, 12, icon_web_16, 16, 16, BLACK);
+                if(num_calls > 0){
+                  display.drawBitmap(0, 12, icon_phone_16, 16, 16, BLACK);
+                  display.setCursor(3,30);
+                  display.setTextSize(2);
+                  display.print(num_calls);
+                }                
+                
+                if(num_sms > 0){
+                  display.drawBitmap(22, 12, icon_sms_16, 16, 16, BLACK);
+                  display.setCursor(25,30);
+                  display.setTextSize(2);
+                  display.print(num_sms);
+                }
+                
+                if(num_email > 0){
+                  display.drawBitmap(44, 12, icon_email_16, 16, 16, BLACK);
+                  display.setCursor(47,30);
+                  display.setTextSize(2);
+                  display.print(num_email);
+                }
+                
+                if(num_other > 0){
+                  display.drawBitmap(66, 12, icon_web_16, 16, 16, BLACK);
+                  display.setCursor(69,30);
+                  display.setTextSize(2);
+                  display.print(num_other);
+                }
                 
                 display.display();
                 
-                /*
-                display.setCursor(12, 8);
-                display.print("SMS       ");
-                display.print(num_sms);
-                display.print("\n  Chiamate  ");
-                display.print(num_calls);
-                display.print("\n  Email     ");
-                display.print(num_email);
-                display.display();
-                */
-                
+              
               break;
               
               case 'B':  //Chiamata in arrivo
