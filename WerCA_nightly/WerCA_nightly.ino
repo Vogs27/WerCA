@@ -469,6 +469,7 @@ void aci_loop()
             
             if(gotCallerNum && gotCallerID){
               display.clearDisplay();
+              display.setTextSize(1);
               display.drawBitmap(33, 0, incoming_16x22, 16, 22, BLACK);
               display.setCursor(2,22);
               display.print(F("Incoming call:"));
