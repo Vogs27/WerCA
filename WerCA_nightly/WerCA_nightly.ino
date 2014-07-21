@@ -384,7 +384,7 @@ void aci_loop()
             {
               Serial.print((char)aci_evt->params.data_received.rx_data.aci_data[i]);
               uart_buffer[i] = aci_evt->params.data_received.rx_data.aci_data[i];
-              ELP_data[i] = aci_evt->params.data_received.rx_data.aci_data[i]; //CREA BUFFER VSP
+              ELP_data[i] = aci_evt->params.data_received.rx_data.aci_data[i]; //CREA BUFFER ELP
               
               
               Serial.print(F(" "));
@@ -400,18 +400,16 @@ void aci_loop()
                 num_email = ELP_data[3] - '0';
                 num_other = ELP_data[4] - '0';
                 
-                //SALVA LE ORE
-                for(int i=0; i<=5; i++){
-                  time[i] = ELP_data[i+10];
-                }
-                
+                                
                 display.clearDisplay();
                 display.setContrast(25);
                 display.setTextSize(1);
                 
                 //Visualizza ore
                 display.setCursor(54,0);
-                display.print(time);
+                display.print(ELP_data[10], DEC);
+                display.print(ELP_data[11]);
+                display.print(ELP_data[12], DEC);
                 
                 if(num_calls > 0){
                   display.drawBitmap(0, 12, icon_phone_16, 16, 16, BLACK);
