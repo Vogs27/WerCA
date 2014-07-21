@@ -331,6 +331,7 @@ void aci_loop()
         display.clearDisplay();
         display.drawBitmap(0, 0, BT_8x9, 8, 9, BLACK);
         display.setCursor(0,11);
+        display.setTextSize(1);
         display.println(F("Connesso al\ntelefono"));
         display.display();
         /*
@@ -452,7 +453,7 @@ void aci_loop()
               break;
               
               case 'C':  //ID chiamante
-              for(int i=1; i<=16; i++){
+              for(int i=1; i<=14; i++){
                 incoming_name[i-1]=ELP_data[i];
               }
               gotCallerID = true;
@@ -471,7 +472,7 @@ void aci_loop()
               display.drawBitmap(33, 0, incoming_16x22, 16, 22, BLACK);
               display.setCursor(2,22);
               display.print(F("Incoming call:"));
-              display.setCursor(2,31);
+              display.setCursor(0,31);
               display.print(incoming_name);
               display.setCursor(0,40);
               display.print(incoming_number);
