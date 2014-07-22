@@ -75,6 +75,7 @@ int num_sms = '0';
 int num_calls = '0';
 int num_email = '0';
 int num_other = '0';
+char call_type;
 char incoming_number[15];
 char incoming_name[16];
 char phone_battery;
@@ -410,6 +411,8 @@ void aci_loop()
                 display.setCursor(54,0);
                 display.print(ELP_data[10], DEC);
                 display.print(ELP_data[11]);
+                if(ELP_data[12] < 10)
+                  display.print("0");
                 display.print(ELP_data[12], DEC);
                 
                 if(num_calls > 0){
@@ -442,13 +445,13 @@ void aci_loop()
                 
                 display.display();
                 
-              
               break;
               
               case 'B':  //Chiamata in arrivo
-              for(int i=1; i<16; i++){
-                incoming_number[i-1]=ELP_data[i];
+              for(int i=2; i<15; i++){
+                incoming_number[i-2]=ELP_data[i];
               }
+              call_type = ELP_data[1];
               gotCallerNum = true;
               break;
               
@@ -470,8 +473,25 @@ void aci_loop()
               display.clearDisplay();
               display.setTextSize(1);
               display.drawBitmap(33, 0, incoming_16x22, 16, 22, BLACK);
-              display.setCursor(2,22);
-              display.print(F("Incoming call:"));
+              switch(call_type){
+                case 'I':
+                  display.setCursor(2,22);
+                  display.print(F("Incoming call"));
+                  break;
+                case 'D':
+                  display.setCursor(12,22);
+                  display.print(F("In call..."));
+                  break;
+                case 'O':
+                  display.setCursor(12,22);
+                  display.print(F("Dialing..."));
+                  break;
+                default:
+                  Serial.println(F("Tipo di chiamata non valido"));
+                  Serial.println(call_type);
+                  break;
+              }
+              
               display.setCursor(0,31);
               display.print(incoming_name);
               display.setCursor(0,40);
@@ -479,6 +499,8 @@ void aci_loop()
               display.display();
               gotCallerNum = false;
               gotCallerID = false;
+              memset(incoming_name,0,sizeof(incoming_name));
+              memset(incoming_number,0,sizeof(incoming_number));
             }
             
             /*Serial.println(F("SMS,chiamate,email"));
