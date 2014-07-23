@@ -407,44 +407,54 @@ void aci_loop()
                 display.setContrast(25);
                 display.setTextSize(1);
                 
-                //Visualizza ore
-                display.setCursor(54,0);
-                display.print(ELP_data[10], DEC);
-                display.print(ELP_data[11]);
-                if(ELP_data[12] < 10)
-                  display.print("0");
-                display.print(ELP_data[12], DEC);
-                
-                if(num_calls > 0){
-                  display.drawBitmap(0, 12, icon_phone_16, 16, 16, BLACK);
-                  display.setCursor(3,30);
+                if(num_sms == 0 && num_calls == 0 && num_email == 0 && num_other == 0){
+                  //se non ci sono notifiche visualizza ore a schermo intero
+                  display.setCursor(13,16);
                   display.setTextSize(2);
-                  display.print(num_calls);
-                }                
-                
-                if(num_sms > 0){
-                  display.drawBitmap(22, 12, icon_sms_16, 16, 16, BLACK);
-                  display.setCursor(25,30);
-                  display.setTextSize(2);
-                  display.print(num_sms);
+                  display.print(ELP_data[10], DEC);
+                  display.print(ELP_data[11]);
+                  if(ELP_data[12] < 10)
+                    display.print("0");
+                  display.print(ELP_data[12], DEC);
+                  
+                } else {
+                  //Visualizza ore
+                  display.setCursor(54,0);
+                  display.print(ELP_data[10], DEC);
+                  display.print(ELP_data[11]);
+                  if(ELP_data[12] < 10)
+                    display.print("0");
+                  display.print(ELP_data[12], DEC);
+                  
+                  if(num_calls > 0){
+                    display.drawBitmap(0, 12, icon_phone_16, 16, 16, BLACK);
+                    display.setCursor(3,30);
+                    display.setTextSize(2);
+                    display.print(num_calls);
+                  }                
+                  
+                  if(num_sms > 0){
+                    display.drawBitmap(22, 12, icon_sms_16, 16, 16, BLACK);
+                    display.setCursor(25,30);
+                    display.setTextSize(2);
+                    display.print(num_sms);
+                  }
+                  
+                  if(num_email > 0){
+                    display.drawBitmap(44, 12, icon_email_16, 16, 16, BLACK);
+                    display.setCursor(47,30);
+                    display.setTextSize(2);
+                    display.print(num_email);
+                  }
+                  
+                  if(num_other > 0){
+                    display.drawBitmap(66, 12, icon_web_16, 16, 16, BLACK);
+                    display.setCursor(69,30);
+                    display.setTextSize(2);
+                    display.print(num_other);
+                  }                  
                 }
-                
-                if(num_email > 0){
-                  display.drawBitmap(44, 12, icon_email_16, 16, 16, BLACK);
-                  display.setCursor(47,30);
-                  display.setTextSize(2);
-                  display.print(num_email);
-                }
-                
-                if(num_other > 0){
-                  display.drawBitmap(66, 12, icon_web_16, 16, 16, BLACK);
-                  display.setCursor(69,30);
-                  display.setTextSize(2);
-                  display.print(num_other);
-                }
-                
                 display.display();
-                
               break;
               
               case 'B':  //Chiamata in arrivo
