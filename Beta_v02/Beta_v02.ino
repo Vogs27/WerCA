@@ -11,7 +11,7 @@ LED su PIN6 e PIN7
 #include "icons.h" //include bitmap file
 //Put the nRF8001 setup in the RAM of the nRF8001.
 #include "services.h"
-
+byte sysver[2] = {0, 2};
 /**
 Include the services_lock.h to put the setup in the OTP memory of the nRF8001.
 This would mean that the setup cannot be changed once put in.
@@ -108,7 +108,10 @@ void setup(void)
   display.setCursor(14, 0);
   display.println("CodeATLAS");
   display.setCursor(14, 8);
-  display.println("WerCA 0.2");
+  display.print("WerCA ");
+  display.print(sysver[0], DEC);
+  display.print(".");
+  display.print(sysver[1], DEC);
   //Serial.println("Display scritto");
   //delay(200);
   display.drawBitmap(24, 20, logo32, 32, 32, BLACK);
@@ -366,9 +369,21 @@ void aci_loop()
         //Serial.println(F("Evt Disconnected/Advertising timed out"));
         lib_aci_connect(0/* in seconds  : 0 means forever */, 0x0050 /* advertising interval 50ms*/);
         
-        display.clearDisplay();
-        display.setCursor(0,8);
-        display.println(F("DISCONNESSO\nRiconnettere\nil telefono"));
+  display.clearDisplay();
+  display.setContrast(32);
+  display.setTextSize(1);              
+  display.setTextColor(BLACK);
+  display.setCursor(14, 0);
+  display.println("CodeATLAS");
+  display.setCursor(14, 8);
+  display.print("WerCA ");
+  display.print(sysver[0], DEC);
+  display.print(".");
+  display.print(sysver[1], DEC);
+    //Serial.println("Display scritto");
+  //delay(200);
+  display.drawBitmap(24, 20, logo32, 32, 32, BLACK);
+  display.display();
         //Serial.println(F("Advertising started. Tap Connect on the nRF UART app"));
         break;
 
