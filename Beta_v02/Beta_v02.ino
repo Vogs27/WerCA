@@ -8,8 +8,7 @@ LED su PIN6 e PIN7
 #include <lib_aci.h>
 #include <aci_setup.h>
 #include "uart_over_ble.h"
-#include "icons.h"
-
+#include "icons.h" //include bitmap file
 //Put the nRF8001 setup in the RAM of the nRF8001.
 #include "services.h"
 
@@ -86,38 +85,37 @@ boolean gotCallerNum = false;
 
 /* Define how assert should function in the BLE library */
 void __ble_assert(const char *file, uint16_t line)
-{
+{/*
   Serial.print("ERROR ");
   Serial.print(file);
   Serial.print(": ");
   Serial.print(line);
   Serial.print("\n");
-  while(1);
+  while(1); */
 }
 
 void setup(void)
 {
-  Serial.begin(19200);
-  Serial.println(F("WerCA pre-nighly 0.2"));
-  Serial.println(F("Test firmware with BLE"));
+  //Serial.begin(19200);
+ // Serial.println(F("WerCA v0.2"));
+  //Serial.println(F("Verbose mode"));
   display.begin();
-  delay(50);
-  Serial.println("Display acceso");
+ // Serial.println("Display acceso");
   display.clearDisplay();
-  display.setContrast(25);
+  display.setContrast(32);
   display.setTextSize(1);              
   display.setTextColor(BLACK);
-  display.setCursor(10, 0);
+  display.setCursor(14, 0);
   display.println("CodeATLAS");
-  display.setCursor(12, 8);
+  display.setCursor(14, 8);
   display.println("WerCA 0.2");
-  Serial.println("Display scritto");
-  delay(200);
-  display.drawBitmap(20, 20, logo32, 32, 32, BLACK);
+  //Serial.println("Display scritto");
+  //delay(200);
+  display.drawBitmap(24, 20, logo32, 32, 32, BLACK);
   display.display();
   delay(50);
   
-  Serial.println(F("Doing nRF setup"));  
+  //Serial.println(F("Doing nRF setup"));  
  /**
   Point ACI data structures to the the setup data that the nRFgo studio generated for the nRF8001
   */
@@ -154,7 +152,7 @@ void setup(void)
   aci_state.aci_pins.interrupt_number       = 1;
 
   lib_aci_init(&aci_state, false);
-  Serial.println(F("Set up done"));
+  //Serial.println(F("Set up done"));
 }
 
 void uart_over_ble_init(void)
@@ -186,7 +184,7 @@ bool uart_process_control_point_rx(uint8_t *byte, uint8_t length)
 
   if (lib_aci_is_pipe_available(&aci_state, PIPE_UART_OVER_BTLE_UART_CONTROL_POINT_TX) )
   {
-    Serial.println(*byte, HEX);
+    //Serial.println(*byte, HEX);
     switch(*byte)
     {
       /*
@@ -277,14 +275,14 @@ void aci_loop()
             /**
             When the device is in the setup mode
             */
-            Serial.println(F("Evt Device Started: Setup"));
+            //Serial.println(F("Evt Device Started: Setup"));
             setup_required = true;
             break;
 
           case ACI_DEVICE_STANDBY:
-            Serial.println(F("Evt Device Started: Standby"));
-            //Looking for an iPhone by sending radio advertisements
-            //When an iPhone connects to us we will get an ACI_EVT_CONNECTED event from the nRF8001
+           // Serial.println(F("Evt Device Started: Standby"));
+            //Looking for a phone by sending radio advertisements
+            //When an phone connects to us we will get an ACI_EVT_CONNECTED event from the nRF8001
             if (aci_evt->params.device_started.hw_error)
             {
               delay(20); //Handle the HW error event correctly.
@@ -292,7 +290,7 @@ void aci_loop()
             else
             {
               lib_aci_connect(0/* in seconds : 0 means forever */, 0x0050 /* advertising interval 50ms*/);
-              Serial.println(F("Advertising started : Tap Connect on the nRF UART app"));
+              //Serial.println(F("Advertising started : Tap Connect on the WerCA app"));
             }
 
             break;
@@ -307,10 +305,11 @@ void aci_loop()
           //ACI ReadDynamicData and ACI WriteDynamicData will have status codes of
           //TRANSACTION_CONTINUE and TRANSACTION_COMPLETE
           //all other ACI commands will have status code of ACI_STATUS_SCUCCESS for a successful command
-          Serial.print(F("ACI Command "));
+        /*  Serial.print(F("ACI Command "));
           Serial.println(aci_evt->params.cmd_rsp.cmd_opcode, HEX);
           Serial.print(F("Evt Cmd respone: Status "));
           Serial.println(aci_evt->params.cmd_rsp.cmd_status, HEX);
+          */
         }
         if (ACI_CMD_GET_DEVICE_VERSION == aci_evt->params.cmd_rsp.cmd_opcode)
         {
@@ -321,17 +320,18 @@ void aci_loop()
         break;
 
       case ACI_EVT_CONNECTED:
-        Serial.println(F("Evt Connected"));
+       // Serial.println(F("Evt Connected"));
         uart_over_ble_init();
         timing_change_done              = false;
         aci_state.data_credit_available = aci_state.data_credit_total;
-
-
+        
         display.clearDisplay();
-        display.drawBitmap(0, 0, BT_8x9, 8, 9, BLACK);
-        display.setCursor(0,11);
+        display.drawBitmap(37, 0, BT_8x9, 8, 9, BLACK);
+        display.setCursor(6,11);
         display.setTextSize(1);
-        display.println(F("Connesso al\ntelefono"));
+        display.println(F("Connesso al"));
+        display.setCursor(14, 20);
+        display.println(F("telefono"));
         display.display();
         /*
         Get the device version of the nRF8001 and store it in the Hardware Revision String
@@ -340,22 +340,22 @@ void aci_loop()
         break;
 
       case ACI_EVT_PIPE_STATUS:
-        Serial.println(F("Evt Pipe Status"));
+       // Serial.println(F("Evt Pipe Status"));
         if (lib_aci_is_pipe_available(&aci_state, PIPE_UART_OVER_BTLE_UART_TX_TX) && (false == timing_change_done))
         {
           lib_aci_change_timing_GAP_PPCP(); // change the timing on the link as specified in the nRFgo studio -> nRF8001 conf. -> GAP.
                                             // Used to increase or decrease bandwidth
           timing_change_done = true;
 
-          char hello[]="Connessione stabilita";
-          uart_tx((uint8_t *)&hello[0], strlen(hello));
-          Serial.print(F("Sending :"));
-          Serial.println(hello);
+          //char hello[]="Connessione stabilita";
+          //uart_tx((uint8_t *)&hello[0], strlen(hello));
+         // Serial.print(F("Sending :"));
+          //Serial.println(hello);
         }
         break;
 
       case ACI_EVT_TIMING:
-        Serial.println(F("Evt link connection interval changed"));
+       // Serial.println(F("Evt link connection interval changed"));
         lib_aci_set_local_data(&aci_state,
                                 PIPE_UART_OVER_BTLE_UART_LINK_TIMING_CURRENT_SET,
                                 (uint8_t *)&(aci_evt->params.timing.conn_rf_interval), /* Byte aligned */
@@ -363,31 +363,31 @@ void aci_loop()
         break;
 
       case ACI_EVT_DISCONNECTED:
-        Serial.println(F("Evt Disconnected/Advertising timed out"));
+        //Serial.println(F("Evt Disconnected/Advertising timed out"));
         lib_aci_connect(0/* in seconds  : 0 means forever */, 0x0050 /* advertising interval 50ms*/);
         
         display.clearDisplay();
         display.setCursor(0,8);
         display.println(F("DISCONNESSO\nRiconnettere\nil telefono"));
-        Serial.println(F("Advertising started. Tap Connect on the nRF UART app"));
+        //Serial.println(F("Advertising started. Tap Connect on the nRF UART app"));
         break;
 
       case ACI_EVT_DATA_RECEIVED:
-        Serial.print(F("Pipe Number: "));
-        Serial.println(aci_evt->params.data_received.rx_data.pipe_number, DEC);
+        //Serial.print(F("Pipe Number: "));
+        //Serial.println(aci_evt->params.data_received.rx_data.pipe_number, DEC);
 
         if (PIPE_UART_OVER_BTLE_UART_RX_RX == aci_evt->params.data_received.rx_data.pipe_number)
           {
 
-            Serial.print(F(" Data(Hex) : "));
+            //Serial.print(F(" Data(Hex) : "));
             for(int i=0; i<aci_evt->len - 2; i++)
             {
-              Serial.print((char)aci_evt->params.data_received.rx_data.aci_data[i]);
+             // Serial.print((char)aci_evt->params.data_received.rx_data.aci_data[i]);
               uart_buffer[i] = aci_evt->params.data_received.rx_data.aci_data[i];
               ELP_data[i] = aci_evt->params.data_received.rx_data.aci_data[i]; //CREA BUFFER ELP
               
               
-              Serial.print(F(" "));
+              //Serial.print(F(" "));
             }
             
  
@@ -402,7 +402,7 @@ void aci_loop()
                 
                                 
                 display.clearDisplay();
-                display.setContrast(25);
+                display.setContrast(32);
                 display.setTextSize(1);
                 
                 if(num_sms == 0 && num_calls == 0 && num_email == 0 && num_other == 0){
@@ -416,7 +416,7 @@ void aci_loop()
                   display.print(ELP_data[12], DEC);
                   
                 } else {
-                  //Visualizza ore
+                  //Visualizza ore piccole
                   display.setCursor(54,0);
                   display.print(ELP_data[10], DEC);
                   display.print(ELP_data[11]);
@@ -471,7 +471,7 @@ void aci_loop()
               break;
               
               default:
-              Serial.println(F("Non lo so"));
+             // Serial.println(F("Non lo so"));
               break;
             }
             
@@ -495,8 +495,8 @@ void aci_loop()
                   display.print(F("Dialing..."));
                   break;
                 default:
-                  Serial.println(F("Tipo di chiamata non valido"));
-                  Serial.println(call_type);
+                  //Serial.println(F("Tipo di chiamata non valido"));
+                  //Serial.println(call_type);
                   break;
               }
               
@@ -522,7 +522,7 @@ void aci_loop()
             
             
             uart_buffer_len = aci_evt->len - 2;
-            Serial.println(F(""));
+           // Serial.println(F(""));
             if (lib_aci_is_pipe_available(&aci_state, PIPE_UART_OVER_BTLE_UART_TX_TX))
             {
               /*Do this to test the loopback otherwise comment it out*/
@@ -550,11 +550,11 @@ void aci_loop()
 
       case ACI_EVT_PIPE_ERROR:
         //See the appendix in the nRF8001 Product Specication for details on the error codes
-        Serial.print(F("ACI Evt Pipe Error: Pipe #:"));
+        /*Serial.print(F("ACI Evt Pipe Error: Pipe #:"));
         Serial.print(aci_evt->params.pipe_error.pipe_number, DEC);
         Serial.print(F("  Pipe Error Code: 0x"));
         Serial.println(aci_evt->params.pipe_error.error_code, HEX);
-
+*/
         //Increment the credit available as the data packet was not sent.
         //The pipe error also represents the Attribute protocol Error Response sent from the peer and that should not be counted
         //for the credit.
@@ -565,16 +565,16 @@ void aci_loop()
         break;
 
       case ACI_EVT_HW_ERROR:
-        Serial.print(F("HW error: "));
-        Serial.println(aci_evt->params.hw_error.line_num, DEC);
+       // Serial.print(F("HW error: "));
+       // Serial.println(aci_evt->params.hw_error.line_num, DEC);
 
         for(uint8_t counter = 0; counter <= (aci_evt->len - 3); counter++)
         {
-          Serial.write(aci_evt->params.hw_error.file_name[counter]); //uint8_t file_name[20];
+         // Serial.write(aci_evt->params.hw_error.file_name[counter]); //uint8_t file_name[20];
         }
-        Serial.println();
+        //Serial.println();
         lib_aci_connect(0/* in seconds, 0 means forever */, 0x0050 /* advertising interval 50ms*/);
-        Serial.println(F("Advertising started. Tap Connect on the nRF UART app"));
+       // Serial.println(F("Advertising started. Tap Connect on the WerCA app"));
         break;
 
     }
@@ -643,14 +643,14 @@ if(VSP_data)
   // print the string when a newline arrives:
   if (stringComplete) 
   {
-    Serial.print(F("Sending: "));
-    Serial.println((char *)&uart_buffer[0]);
+    //Serial.print(F("Sending: "));
+    //Serial.println((char *)&uart_buffer[0]);
 
     uart_buffer_len = stringIndex + 1;
 
     if (!lib_aci_send_data(PIPE_UART_OVER_BTLE_UART_TX_TX, uart_buffer, uart_buffer_len))
     {
-      Serial.println(F("Serial input dropped"));
+     // Serial.println(F("Serial input dropped"));
     }
 
     // clear the uart_buffer:
@@ -664,12 +664,12 @@ if(VSP_data)
     stringComplete = false;
   }
   //For ChipKit you have to call the function that reads from Serial
-  #if defined (__PIC32MX__)
+ /* #if defined (__PIC32MX__)
     if (Serial.available())
     {
       serialEvent();
     }
-  #endif
+  #endif */
 }
 
 /*
@@ -682,7 +682,7 @@ if(VSP_data)
  */
 void serialEvent() {
 
-  while(Serial.available() > 0){
+ /* while(Serial.available() > 0){
     // get the new byte:
     dummychar = (uint8_t)Serial.read();
     if(!stringComplete)
@@ -710,6 +710,6 @@ void serialEvent() {
         }
       }
     }
-  }
+  } */
 }
 
