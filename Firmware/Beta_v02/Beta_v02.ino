@@ -3,7 +3,7 @@ WerCA FW beta V.0.2
 LED su PIN6 e PIN7
 */
 
-//Including BLE libraries
+//Including BLE libraries, initialize BLE
 #include <SPI.h>
 #include <lib_aci.h>
 #include <aci_setup.h>
@@ -11,7 +11,7 @@ LED su PIN6 e PIN7
 #include "icons.h" //include bitmap file
 //Put the nRF8001 setup in the RAM of the nRF8001.
 #include "services.h"
-byte sysver[2] = {0, 2};
+byte sysver[2] = {0, 4};
 /**
 Include the services_lock.h to put the setup in the OTP memory of the nRF8001.
 This would mean that the setup cannot be changed once put in.
@@ -44,13 +44,11 @@ static uint8_t         uart_buffer[20];
 static uint8_t         uart_buffer_len = 0;
 static uint8_t         dummychar = 0;
 
-
-
-//DISPLAY
+//Including Display libs, initialize DISPLAY
 #include <Adafruit_GFX.h>
 #include <Adafruit_PCD8544.h>
 
-
+//DISPLAY PINOUT
 // Software SPI:
 // pin 7 - Serial clock out (SCLK)
 // pin 6 - Serial data out (DIN)
@@ -59,11 +57,6 @@ static uint8_t         dummychar = 0;
 // pin 3 - LCD reset (RST)
 
 Adafruit_PCD8544 display = Adafruit_PCD8544(7, 6, 5, 10, 3);
-
-//VARIABILI NOSTRE
-char VSP_data[20];
-static int ledVerde = 7;
-static int ledRosso = 6;
 
 //Implementazioni variabili ELP
 char ELP_data[20];
@@ -135,21 +128,22 @@ void setup(void)
   aci_state.aci_setup_info.num_setup_msgs     = NB_SETUP_MESSAGES;
   
 /*
+  BLE PINOUT CONFIG
   Tell the ACI library, the MCU to nRF8001 pin connections.
   The Active pin is optional and can be marked UNUSED
   */
   aci_state.aci_pins.board_name = BOARD_DEFAULT; //See board.h for details REDBEARLAB_SHIELD_V1_1 or BOARD_DEFAULT
-  aci_state.aci_pins.reqn_pin   = 9; //SS for Nordic board, 9 for REDBEARLAB_SHIELD_V1_1
-  aci_state.aci_pins.rdyn_pin   = 8; //3 for Nordic board, 8 for REDBEARLAB_SHIELD_V1_1
+  aci_state.aci_pins.reqn_pin   = 9; //SS for Nordic board, 9 for REDBEARLAB_SHIELD_V1_1, 9 for WerCA
+  aci_state.aci_pins.rdyn_pin   = 8; //3 for Nordic board, 8 for REDBEARLAB_SHIELD_V1_1, 8 for WerCA
   aci_state.aci_pins.mosi_pin   = MOSI;
   aci_state.aci_pins.miso_pin   = MISO;
   aci_state.aci_pins.sck_pin    = SCK;
 
   aci_state.aci_pins.spi_clock_divider      = SPI_CLOCK_DIV16;  //SPI_CLOCK_DIV8  = 2MHz SPI speed (DOESN'T WORK)
                                                                 //SPI_CLOCK_DIV16 = 1MHz SPI speed 
-  aci_state.aci_pins.reset_pin              = 4; //4 for Nordic board, UNUSED for REDBEARLAB_SHIELD_V1_1
-  aci_state.aci_pins.active_pin             = UNUSED;
-  aci_state.aci_pins.optional_chip_sel_pin  = UNUSED;
+  aci_state.aci_pins.reset_pin              = 4; //4 for Nordic board, UNUSED for REDBEARLAB_SHIELD_V1_1, 4 for WerCA
+  aci_state.aci_pins.active_pin             = UNUSED; //Unused for WerCA
+  aci_state.aci_pins.optional_chip_sel_pin  = UNUSED; //Unused for WerCA
 
   aci_state.aci_pins.interface_is_interrupt = false; //Interrupts still not available in Chipkit
   aci_state.aci_pins.interrupt_number       = 1;
@@ -332,8 +326,10 @@ void aci_loop()
         display.drawBitmap(37, 0, BT_8x9, 8, 9, BLACK);
         display.setCursor(6,11);
         display.setTextSize(1);
-        display.println(F("Connesso al"));
-        display.setCursor(14, 20);
+        display.println(F("Connesso"));
+        display.setCursor(2, 20);
+        display.println(F("Attendo il"));
+        display.setCursor(14, 29);
         display.println(F("telefono"));
         display.display();
         /*
@@ -368,7 +364,6 @@ void aci_loop()
       case ACI_EVT_DISCONNECTED:
         //Serial.println(F("Evt Disconnected/Advertising timed out"));
         lib_aci_connect(0/* in seconds  : 0 means forever */, 0x0050 /* advertising interval 50ms*/);
-        
   display.clearDisplay();
   display.setContrast(32);
   display.setTextSize(1);              
@@ -381,7 +376,6 @@ void aci_loop()
   display.print(".");
   display.print(sysver[1], DEC);
     //Serial.println("Display scritto");
-  //delay(200);
   display.drawBitmap(24, 20, logo32, 32, 32, BLACK);
   display.display();
         //Serial.println(F("Advertising started. Tap Connect on the nRF UART app"));
@@ -622,39 +616,7 @@ void loop() {
 
   //Process any ACI commands or events
   aci_loop();
-  
-             /*LED TEST
-            if(VSP_data[0] == '1')
-              {
-                digitalWrite(ledVerde, HIGH);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-              else if(VSP_data[0] == '0')
-              {
-                digitalWrite(ledVerde, LOW);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-              if(VSP_data[1] == '1')
-              {
-                digitalWrite(ledRosso, HIGH);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-              else if(VSP_data[1] == '0')
-              {
-                digitalWrite(ledRosso, LOW);
-                Serial.println("Led acceso, ricevuto 8 in ACI_EVT_DATA_RECEIVED");
-              }
-            Serial.println("VSP data:");
-            for(int i=0; i<20; i++)
-            {
-              Serial.println(VSP_data[i]);
-            }
 
-if(VSP_data)
-{
-  Serial.println(VSP_data);
-}
-*/
   // print the string when a newline arrives:
   if (stringComplete) 
   {

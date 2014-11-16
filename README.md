@@ -87,7 +87,7 @@ L’idea di prototipo iniziale prevedeva un bracciale dalle dimensioni contenute c
 Durante la fase di sviluppo, è parsa evidente, però, l’impossibilità di proseguire per questa strada: i consumi del dispositivo sarebbero stati troppo elevati per essere gestiti da una batteria di ridotte dimensioni e l’autonomia ne avrebbe fortemente risentito.
 Si è scelto quindi di sostituire al LED RGB un display LCD, dai consumi più contenuti.
 
-La scelta del microprocessore, cuore dello smartwatch, è stata effettuata dopo un’analisi dei vari chip presenti sul mercato. Si è scelto un ATmega 320 data la sua compatibilità con l’ide di Arduino, che ne semplifica enormemente la programmazione e per la sua economicità. Dall’analisi si attende un arrivo di numerosi SoC (System on a Chip) tra la fine del secondo e l’inizio del terzo trimestre di quest’anno. Al fine di ridurre ulteriormente i consumi del microprocessore, si è deciso di potrare il suo clock da 16MHz ad 8MHz. Questo ha permesso anche la riduzione di componenti esterni: è infatti utilizzato il clock generato internamente dallo stesso ATmega, eliminando un quarzo e due condensatori ceramici.
+La scelta del microprocessore, cuore dello smartwatch, è stata effettuata dopo un’analisi dei vari chip presenti sul mercato. Si è scelto un ATmega 320 data la sua compatibilità con l’ide di Arduino, che ne semplifica enormemente la programmazione e per la sua economicità. Dall’analisi si attende un arrivo di numerosi SoC (System on a Chip) tra la fine del secondo e l’inizio del terzo trimestre di quest’anno.
 
 Come anticipato in precedenza, la visualizzazione dei dati avviene su di un display LCD. Si è scelto il display presente nei vecchi Nokia 5110 e 3310, pilotato dal controller Philips PCD8544, di facile reperibilità e dal basso costo.
 
@@ -98,6 +98,7 @@ L’alimentazione è controllata da un regolatore (LE33) per livellare la tensione 
 Si riporta di seguito la soluzione hardware adottata.
 
 ----- SPI div 16
+Nota: nella realizzazione pratica si è optato per una verione di Arduino NANO modificata eliminando il regolatore di tensione AMS1117 5.0: dove prima era collegata l'uscita del regolatore è stato collegato il polo positivo della batteria da 3.7 volt. La pista che collegava il connettore USB al regolatore di tensione è stata collegata al caricatore della batteria. Le linee dati USB sono state lasciate inalterate: questo permette una riprogrammazione del dispositivo semplicemente collegandolo al computer tramite la porta USB e caricando il nuovo firmware, semplificando enormemente la procedura di aggiornamento ed evitando l'utilizzo di adattatori seriali esterni.
 
 -Firmware
 
@@ -111,23 +112,6 @@ SMS
 E-Mail
 
 Altro.
-La comunicazione tra l’orologio e il telefono è monodirezionale per quanto riguarda la comunicazione delle notifiche. Per la comunicazione viene utilizzato VSP (Vog’ Simple Protocol), che prevede un array di interi ad otto elementi, illustrati di seguito.
+La comunicazione tra l’orologio e il telefono è monodirezionale per quanto riguarda la comunicazione delle notifiche.
 
-Elemento 0: SMS. Contiene un intero positivo rappresentante il numero di messaggi non letti (0 = nessuno).
-
-Elemento 1: chiamate. Contiene un intero positivo rappresentante il numero di chiamate perse (0 = nessuna).
-
-Elemento 2: email. Contiene un intero positivo rappresentante il numero di email non lette (0 = nessuna).
-
-Elemento 3: altro. Contiene un intero positivo rappresentante il numero di altre notifiche da leggere (0 = nessuna).
-
-Elemento 4: chiamata in arrivo. Contiene un intero positivo rappresentante il numero di una chiamata in corso (0 = sconosciuto).
-
-Elemento 5: modalità. Definisce la funzione da utilizzare: 0 = Visualizzazione notifiche; 1 = notifica allo smartwatch che è in corso una chiamata, mostrando sul display il numero di telefono dell’apparato chiamato; 2 = invia il comando di shutdown al dispositivo.
-
-Elemento 6: batteria. Valore da 0 a 4 indicante lo stato della batteria del telefono (0 = 0-20%, 1 = 20-40%, 2 = 40-60%, 3 = 60-80%, 4 = 80-100%).
-
-Elemento 7: minuti. Contiene un intero positivo rappresentante i minuti del sistema (da 00 a 59).
-
-Elemento 8: ore. Contiene un intero positivo rappresentante l’ora del sistema (da 00 a 23).
 

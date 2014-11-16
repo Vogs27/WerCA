@@ -1,0 +1,178 @@
+display.clearDisplay();
+  display.setContrast(25);
+  display.setTextSize(1);              
+  display.setTextColor(BLACK);
+  display.setCursor(10, 0);
+  display.println("CodeATLAS");
+  display.setCursor(12, 8);
+  display.println("WerCA 0.1");
+  Serial.println("Display scritto");
+  delay(200);
+  display.drawBitmap(20, 20, logo32, 32, 32, BLACK);
+  display.display();
+
+
+display.drawBitmap(0, 12, icon_phone_16, 16, 16, BLACK);
+                display.drawBitmap(22, 12, icon_sms_16, 16, 16, BLACK);
+                display.drawBitmap(44, 12, icon_email_16, 16, 16, BLACK);
+                display.drawBitmap(66, 12, icon_web_16, 16, 16, BLACK);
+                
+
+ //LETTURA ELP_data
+            switch(ELP_data[0])
+            {
+              case 'A':  //NOTIFICHE
+                num_sms = ELP_data[1] - '0';
+                num_calls = ELP_data[2] - '0';
+                num_email = ELP_data[3] - '0';
+                num_other = ELP_data[4] - '0';
+                
+                                
+                display.clearDisplay();
+                display.setContrast(32);
+                display.setTextSize(1);
+                
+                if(num_sms == 0 && num_calls == 0 && num_email == 0 && num_other == 0){
+                  //se non ci sono notifiche visualizza ore a schermo intero
+                  display.setCursor(13,16);
+                  display.setTextSize(2);
+                  display.print(ELP_data[10], DEC);
+                  display.print(ELP_data[11]);
+                  if(ELP_data[12] < 10)
+                    display.print("0");
+                  display.print(ELP_data[12], DEC);
+                  
+                } else {
+                  //Visualizza ore piccole
+                  display.setCursor(54,0);
+                  display.print(ELP_data[10], DEC);
+                  display.print(ELP_data[11]);
+                  if(ELP_data[12] < 10)
+                    display.print("0");
+                  display.print(ELP_data[12], DEC);
+                  
+                  if(num_calls > 0){
+                    display.drawBitmap(0, 12, icon_phone_16, 16, 16, BLACK);
+                    display.setCursor(3,30);
+                    display.setTextSize(2);
+                    display.print(num_calls);
+                  }                
+                  
+                  if(num_sms > 0){
+                    display.drawBitmap(22, 12, icon_sms_16, 16, 16, BLACK);
+                    display.setCursor(25,30);
+                    display.setTextSize(2);
+                    display.print(num_sms);
+                  }
+                  
+                  if(num_email > 0){
+                    display.drawBitmap(44, 12, icon_email_16, 16, 16, BLACK);
+                    display.setCursor(47,30);
+                    display.setTextSize(2);
+                    display.print(num_email);
+                  }
+                  
+                  if(num_other > 0){
+                    display.drawBitmap(66, 12, icon_web_16, 16, 16, BLACK);
+                    display.setCursor(69,30);
+                    display.setTextSize(2);
+                    display.print(num_other);
+                  }                  
+                }
+                display.display();
+              break;
+              
+              case 'B':  //Chiamata in arrivo
+              for(int i=2; i<15; i++){
+                incoming_number[i-2]=ELP_data[i];
+              }
+              call_type = ELP_data[1];
+              gotCallerNum = true;
+              break;
+              
+              case 'C':  //ID chiamante
+              for(int i=1; i<=14; i++){
+                incoming_name[i-1]=ELP_data[i];
+              }
+              gotCallerID = true;
+              break;
+              
+              default:
+             // Serial.println(F("Non lo so"));
+              break;
+            }
+            
+            memset(ELP_data,0,sizeof(ELP_data));
+            
+            if(gotCallerNum && gotCallerID){
+              display.clearDisplay();
+              display.setTextSize(1);
+              display.drawBitmap(33, 0, incoming_16x22, 16, 22, BLACK);
+              switch(call_type){
+                case 'I':
+                  display.setCursor(2,22);
+                  display.print(F("Incoming call"));
+                  break;
+                case 'D':
+                  display.setCursor(12,22);
+                  display.print(F("In call..."));
+                  break;
+                case 'O':
+                  display.setCursor(12,22);
+                  display.print(F("Dialing..."));
+                  break;
+                default:
+                  //Serial.println(F("Tipo di chiamata non valido"));
+                  //Serial.println(call_type);
+                  break;
+              }
+              
+              display.setCursor(0,31);
+              display.print(incoming_name);
+              display.setCursor(0,40);
+              display.print(incoming_number);
+              display.display();
+              gotCallerNum = false;
+              gotCallerID = false;
+              memset(incoming_name,0,sizeof(incoming_name));
+              memset(incoming_number,0,sizeof(incoming_number));
+            }
+            
+            /*Serial.println(F("SMS,chiamate,email"));
+            Serial.print(num_sms);
+            Serial.print(F(" , "));
+            Serial.print(num_calls);
+            Serial.print(F(" , "));
+            Serial.print(num_email);
+            Serial.print(F(" , "));
+            */
+            
+            
+            uart_buffer_len = aci_evt->len - 2;
+           // Serial.println(F(""));
+            if (lib_aci_is_pipe_available(&aci_state, PIPE_UART_OVER_BTLE_UART_TX_TX))
+            {
+              /*Do this to test the loopback otherwise comment it out*/
+              /*
+              if (!uart_tx(&uart_buffer[0], aci_evt->len - 2))
+              {
+                Serial.println(F("UART loopback failed"));
+              }
+              else
+              {
+                Serial.println(F("UART loopback OK"));
+              }
+              */
+
+
+
+
+char ELP_data[20];
+int num_sms = '0';
+int num_calls = '0';
+int num_email = '0';
+int num_other = '0';
+char call_type;
+char incoming_number[15];
+char incoming_name[16];
+
