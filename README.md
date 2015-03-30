@@ -12,16 +12,16 @@ This is a project for a low cost easy to build smartwatch, based on Atmel Atmega
 Here's an italian description of the project:
 
 -Introduzione
-
-Con ìWearable Exploartion Technologiesî si intende un progetto di ricerca e sviluppo riguardante tecnologie indossabili rivolte allo svago e alla produttivit‡, con fine la realizzazione di un prototipo. Si intende quindi tralasciare il mondo delle tecnologie indossabili gi‡ esistente da tempo (si pensi al campo medico con i pacemaker), per rivolgersi a quello nascente della multimedialit‡ e di internet, che, anche grazie allo sviluppo promosso dai grandi brand del mercato, sta acquistando sempre pi˘ importanza. I principali prodotti presenti sul mercato sono occhiali, integranti sistemi per líacquisizione e la visualizzazione di dati (quali foto, video o messaggi e chiamate), e smartwatch, prodotti simili in dimensioni e forme ad orologi, in grado di connettersi al proprio smartphone visualizzando vari parametri quali chiamate perse, messaggi, musica in ascolto ed altre informazioni a seconda del prodotto.
-Tra la prima tipologia di prodotti troviamo i Glass, prodotti da Google in collaborazione con Luxottica. Sicuramente pi˘ ampia Ë la seconda tipologia di prodotti, gli smartwatch. Troviamo affacciate sul mercato in questo campo varie aziende tra le quali Samsung, Sony, Pebble ed altre. Di seguito si procede ad un analisi dei pi˘ diffusi smartwatch.
+=====
+Con ‚ÄúWearable Exploartion Technologies‚Äù si intende un progetto di ricerca e sviluppo riguardante tecnologie indossabili rivolte allo svago e alla produttivit√†, con fine la realizzazione di un prototipo. Si intende quindi tralasciare il mondo delle tecnologie indossabili gi√† esistente da tempo (si pensi al campo medico con i pacemaker), per rivolgersi a quello nascente della multimedialit√† e di internet, che, anche grazie allo sviluppo promosso dai grandi brand del mercato, sta acquistando sempre pi√π importanza. I principali prodotti presenti sul mercato sono occhiali, integranti sistemi per l‚Äôacquisizione e la visualizzazione di dati (quali foto, video o messaggi e chiamate), e smartwatch, prodotti simili in dimensioni e forme ad orologi, in grado di connettersi al proprio smartphone visualizzando vari parametri quali chiamate perse, messaggi, musica in ascolto ed altre informazioni a seconda del prodotto.
+Tra la prima tipologia di prodotti troviamo i Glass, prodotti da Google in collaborazione con Luxottica. Sicuramente pi√π ampia √® la seconda tipologia di prodotti, gli smartwatch. Troviamo affacciate sul mercato in questo campo varie aziende tra le quali Samsung, Sony, Pebble ed altre. Di seguito si procede ad un analisi dei pi√π diffusi smartwatch.
 
 -Analisi di mercato
-
-IíM WATCH:
-Prezzo: da Ä 250
+=====
+I‚ÄôM WATCH:
+Prezzo: da ‚Ç¨ 250
 Dimensioni: 52,9 x 40,6 x 10 (in mm)
-Display 1,54íí
+Display 1,54‚Äô‚Äô
 Peso: g 95 (versione color)
 Caratteristiche: 
 Bluetooth tethering
@@ -29,12 +29,12 @@ Compatibile con: iOS 4.0 e successivi, Android 4 e successivi, Blackberry 10 (no
 Memoria interna: 4 GB
 Ram: 128 MB
 Processore: IMX233
-Funzioalit‡ e descrizione:
-iím Watch interagisce con lo smartphone consentendo di visualizzare: email, sms, notifiche, social network, calendario, foto, contatti, meteo e tutte le applicazioni disponibili su iímarket (store che raccoglie tutte le app per lo smartwatch);
+Funzioalit√† e descrizione:
+i‚Äôm Watch interagisce con lo smartphone consentendo di visualizzare: email, sms, notifiche, social network, calendario, foto, contatti, meteo e tutte le applicazioni disponibili su i‚Äômarket (store che raccoglie tutte le app per lo smartwatch);
 
 
 SONY SMARTBAND SWR10:
-Prezzo: Ä 90
+Prezzo: ‚Ç¨ 90
 Dimensioni: bracciale 
 Display: no display
 Peso: g 21
@@ -43,11 +43,11 @@ Impermeabile
 3 LED
 Tasti
 Connessione/associazione NFC
-Funzionalit‡ e descrizione:
-Permette di controllare le attivit‡ con avvisi di notifica e di controllare la musica da remoto. Líunit‡ centrale Ë separabile dal cinturino, disponibile in vari colori; viene venduto con due cinturini (small e large).
+Funzionalit√† e descrizione:
+Permette di controllare le attivit√† con avvisi di notifica e di controllare la musica da remoto. L‚Äôunit√† centrale √® separabile dal cinturino, disponibile in vari colori; viene venduto con due cinturini (small e large).
 
 SAMSUNG GEAR FIT:
-Prezzo: Ä 180
+Prezzo: ‚Ç¨ 180
 Dimensioni: 57,4 x 23,4 x 11,95 
 Display: 1.84" super AMOLED
 Peso: g 21
@@ -55,63 +55,61 @@ Caratteristiche:
 Cardiofrequenzimetro
 Accelerometro
 Giroscopio
-Funzionalit‡ e caratteristiche:
-Con Samsung Gear Fit ricevi subito notifiche di Email, SMS, chiamate in arrivo e app cosÏ sei sempre in contatto con il tuo mondo grazie al sensore di frequenza cardiaca integrato, Samsung Gear Fit ti supporta in tempo reale durante l'attivit‡ fisica e ti d‡ suggerimenti utili per raggiungere i tuoi obiettivi.
+Funzionalit√† e caratteristiche:
+Con Samsung Gear Fit ricevi subito notifiche di Email, SMS, chiamate in arrivo e app cos√¨ sei sempre in contatto con il tuo mondo grazie al sensore di frequenza cardiaca integrato, Samsung Gear Fit ti supporta in tempo reale durante l'attivit√† fisica e ti d√† suggerimenti utili per raggiungere i tuoi obiettivi.
 
 PEBBLE SMART WATCH:
-Prezzo: Ä 150
+Prezzo: ‚Ç¨ 150
 Dimensioni: 97 x 76 x 66
 Display: 1.26" e-ink
 Peso: g 36
 Caratteristiche: 
 Accelerometro
 Sensore ottico
-Funzionalit‡ e descrizione:
-Puoi vedere le pi˘ importanti notifiche anche quando hai le mani occupate, potrai Music controllare la tua musica preferita mentre cammini, mentre corri o mentre guidi senza prendere lo smartphone in mano. Pebble puÚ svegliarti in modo silenzioso con una leggera vibrazione al polso.
+Funzionalit√† e descrizione:
+Puoi vedere le pi√π importanti notifiche anche quando hai le mani occupate, potrai Music controllare la tua musica preferita mentre cammini, mentre corri o mentre guidi senza prendere lo smartphone in mano. Pebble pu√≤ svegliarti in modo silenzioso con una leggera vibrazione al polso.
 CST-01: THE WORLD'S THINNEST WATCH:
-Prezzo: Ä 300
+Prezzo: ‚Ç¨ 300
 Spessore: 0,8 mm
 Display: 1.26" e-ink
 Peso: g 10
 Caratteristiche: 
 Sottilissimo
 Batteria di lunghissima durata (45 giorni)
-Funzionalit‡ e descrizione:
-Il braccialetto CST-01 viene prodotto laminando una serie di componenti flessibili al fine di creare un'unit‡ con spessore di 0,8 mm e quest'ultima viene poi fissata fotochimicamente su una lastra sottilissima di acciaio inossidabile, andando a creare il prodotto finale. Ovviamente al momento si tratta di un semplice orologio e non certo di un device con capacit‡ di e-Reader ma Ë un prodotto che potrebbe a breve schiudere nuove potenzialit‡ per questo tipo di display.
+Funzionalit√† e descrizione:
+Il braccialetto CST-01 viene prodotto laminando una serie di componenti flessibili al fine di creare un'unit√† con spessore di 0,8 mm e quest'ultima viene poi fissata fotochimicamente su una lastra sottilissima di acciaio inossidabile, andando a creare il prodotto finale. Ovviamente al momento si tratta di un semplice orologio e non certo di un device con capacit√† di e-Reader ma √® un prodotto che potrebbe a breve schiudere nuove potenzialit√† per questo tipo di display.
 
 -Hardware
+=====
+Analizzando la struttura delle due tipologie di prodotti, si denota una maggiore facilit√† e flessibilit√† nella realizzazione pratica di un prototipo con le nostre capacit√† produttive negli smartwatch.
 
-Analizzando la struttura delle due tipologie di prodotti, si denota una maggiore facilit‡ e flessibilit‡ nella realizzazione pratica di un prototipo con le nostre capacit‡ produttive negli smartwatch.
+L‚Äôidea di prototipo iniziale prevedeva un bracciale dalle dimensioni contenute con un LED RGB di segnalazione, che tramite un app su di uno smartphone connesso con la tecnologia Bluetooth 4.0 (aka BLE, Bluetooth Low Energy) trasferisse un comando per l‚Äôaccensione del led con un determinata serie di colori prescelta dall‚Äôutente in caso di determinate notifiche sullo smartphone (chiamata persa, nuovo messaggio ecc.).
+Durante la fase di sviluppo, √® parsa evidente, per√≤, l‚Äôimpossibilit√† di proseguire per questa strada: i consumi del dispositivo sarebbero stati troppo elevati per essere gestiti da una batteria di ridotte dimensioni e l‚Äôautonomia ne avrebbe fortemente risentito.
+Si √® scelto quindi di sostituire al LED RGB un display LCD, dai consumi pi√π contenuti.
 
-Líidea di prototipo iniziale prevedeva un bracciale dalle dimensioni contenute con un LED RGB di segnalazione, che tramite un app su di uno smartphone connesso con la tecnologia Bluetooth 4.0 (aka BLE, Bluetooth Low Energy) trasferisse un comando per líaccensione del led con un determinata serie di colori prescelta dallíutente in caso di determinate notifiche sullo smartphone (chiamata persa, nuovo messaggio ecc.).
-Durante la fase di sviluppo, Ë parsa evidente, perÚ, líimpossibilit‡ di proseguire per questa strada: i consumi del dispositivo sarebbero stati troppo elevati per essere gestiti da una batteria di ridotte dimensioni e líautonomia ne avrebbe fortemente risentito.
-Si Ë scelto quindi di sostituire al LED RGB un display LCD, dai consumi pi˘ contenuti.
+La scelta del microprocessore, cuore dello smartwatch, √® stata effettuata dopo un‚Äôanalisi dei vari chip presenti sul mercato. Si √® scelto un ATmega 320 data la sua compatibilit√† con l‚Äôide di Arduino, che ne semplifica enormemente la programmazione e per la sua economicit√†. Dall‚Äôanalisi si attende un arrivo di numerosi SoC (System on a Chip) tra la fine del secondo e l‚Äôinizio del terzo trimestre di quest‚Äôanno.
 
-La scelta del microprocessore, cuore dello smartwatch, Ë stata effettuata dopo uníanalisi dei vari chip presenti sul mercato. Si Ë scelto un ATmega 320 data la sua compatibilit‡ con líide di Arduino, che ne semplifica enormemente la programmazione e per la sua economicit‡. Dallíanalisi si attende un arrivo di numerosi SoC (System on a Chip) tra la fine del secondo e líinizio del terzo trimestre di questíanno.
+Come anticipato in precedenza, la visualizzazione dei dati avviene su di un display LCD. Si √® scelto il display presente nei vecchi Nokia 5110 e 3310, pilotato dal controller Philips PCD8544, di facile reperibilit√† e dal basso costo.
 
-Come anticipato in precedenza, la visualizzazione dei dati avviene su di un display LCD. Si Ë scelto il display presente nei vecchi Nokia 5110 e 3310, pilotato dal controller Philips PCD8544, di facile reperibilit‡ e dal basso costo.
+La comunicazione tra lo smartwatch e lo smartphone √® affidata al chip nRF8001, dal basso costo ed accompagnato da una vasta documentazione.
 
-La comunicazione tra lo smartwatch e lo smartphone Ë affidata al chip nRF8001, dal basso costo ed accompagnato da una vasta documentazione.
-
-Líalimentazione Ë controllata da un regolatore (LE33) per livellare la tensione a 3.3V, massimo accettabile dal modulo BLE e dal display.
+L‚Äôalimentazione √® controllata da un regolatore (LE33) per livellare la tensione a 3.3V, massimo accettabile dal modulo BLE e dal display.
 
 Si riporta di seguito la soluzione hardware adottata.
 
 ----- SPI div 16
-Nota: nella realizzazione pratica si Ë optato per una verione di Arduino NANO modificata eliminando il regolatore di tensione AMS1117 5.0: dove prima era collegata l'uscita del regolatore Ë stato collegato il polo positivo della batteria da 3.7 volt. La pista che collegava il connettore USB al regolatore di tensione Ë stata collegata al caricatore della batteria. Le linee dati USB sono state lasciate inalterate: questo permette una riprogrammazione del dispositivo semplicemente collegandolo al computer tramite la porta USB e caricando il nuovo firmware, semplificando enormemente la procedura di aggiornamento ed evitando l'utilizzo di adattatori seriali esterni.
+Nota: nella realizzazione pratica si √® optato per una verione di Arduino NANO modificata eliminando il regolatore di tensione AMS1117 5.0: dove prima era collegata l'uscita del regolatore √® stato collegato il polo positivo della batteria da 3.7 volt. La pista che collegava il connettore USB al regolatore di tensione √® stata collegata al caricatore della batteria. Le linee dati USB sono state lasciate inalterate: questo permette una riprogrammazione del dispositivo semplicemente collegandolo al computer tramite la porta USB e caricando il nuovo firmware, semplificando enormemente la procedura di aggiornamento ed evitando l'utilizzo di adattatori seriali esterni.
 
 -Firmware
-
-Si consideri la dimensione del display (84 x 48) e del singolo carattere standard (5 x 7): considerando questi fattori, si ricava che il numero di notifiche massime visualizzabili Ë di quattro, con un aggiunta di una barra di stato sempre visibile in capo al display (altrezza di 11px).
+=====
+Si consideri la dimensione del display (84 x 48) e del singolo carattere standard (5 x 7): considerando questi fattori, si ricava che il numero di notifiche massime visualizzabili √® di quattro, con un aggiunta di una barra di stato sempre visibile in capo al display (altrezza di 11px).
 Si sceglie di visualizzare le seguenti notifiche:
-
 Chiamate perse
-
 SMS
-
 E-Mail
-
 Altro.
-La comunicazione tra líorologio e il telefono Ë monodirezionale per quanto riguarda la comunicazione delle notifiche.
+Le icone occupano sempre la stessa posizione sullo schermo, quando visualizzate, per facilitare la lettura "a colpo d'occhio".
+
+La comunicazione √® simplex, da dispositivo a WerCA.
 
 
