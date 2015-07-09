@@ -93,11 +93,8 @@ Come anticipato in precedenza, la visualizzazione dei dati avviene su di un disp
 
 La comunicazione tra lo smartwatch e lo smartphone è affidata al chip nRF8001, dal basso costo ed accompagnato da una vasta documentazione.
 
-L’alimentazione è controllata da un regolatore (LE33) per livellare la tensione a 3.3V, massimo accettabile dal modulo BLE e dal display.
+L'alimentazione non prevede un controllo della tensione, in quanto le tensioni massime e minime della batteria rientrano nei parametri operativi dei componenti. La ricarica della batteria è affidata ad un apposito modulo basato sul chip [nome chip].
 
-Si riporta di seguito la soluzione hardware adottata.
-
------ SPI div 16
 Nota: nella realizzazione pratica si è optato per una verione di Arduino NANO modificata eliminando il regolatore di tensione AMS1117 5.0: dove prima era collegata l'uscita del regolatore è stato collegato il polo positivo della batteria da 3.7 volt. La pista che collegava il connettore USB al regolatore di tensione è stata collegata al caricatore della batteria. Le linee dati USB sono state lasciate inalterate: questo permette una riprogrammazione del dispositivo semplicemente collegandolo al computer tramite la porta USB e caricando il nuovo firmware, semplificando enormemente la procedura di aggiornamento ed evitando l'utilizzo di adattatori seriali esterni.
 
 -Firmware
@@ -108,8 +105,10 @@ Chiamate perse
 SMS
 E-Mail
 Altro.
-Le icone occupano sempre la stessa posizione sullo schermo, quando visualizzate, per facilitare la lettura "a colpo d'occhio".
+Le icone occupano sempre la stessa posizione sullo schermo, quando visualizzate, per facilitare la lettura "a colpo d'occhio". Quando non sono presenti notifiche, l'orologio mostra data e ora a tutto schermo. L'ora e le notifiche vengono gestite ed aggiornate dall'app sullo smartphone. L'unico compito dell'Atmega è gestire il modoulo BLE e comunicare al display i dati ricevuti con la relativa grafica.
 
 La comunicazione è simplex, da dispositivo a WerCA.
+
+----- SPI div 16
 
 
