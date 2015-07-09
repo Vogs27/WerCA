@@ -107,8 +107,7 @@ E-Mail
 Altro.
 Le icone occupano sempre la stessa posizione sullo schermo, quando visualizzate, per facilitare la lettura "a colpo d'occhio". Quando non sono presenti notifiche, l'orologio mostra data e ora a tutto schermo. L'ora e le notifiche vengono gestite ed aggiornate dall'app sullo smartphone. L'unico compito dell'Atmega è gestire il modoulo BLE e comunicare al display i dati ricevuti con la relativa grafica.
 
-La comunicazione è simplex, da dispositivo a WerCA.
-
+La comunicazione è simplex, da dispositivo a WerCA e si basa su una stringa, ove ogni elemento rappresenta un dato: il tipo di dato da visualizzare (notifiche oppure orario), l'ora e la data in sè, il numero di notifiche suddivise per chiamata, messaggi, email e notifiche varie.
 ----- SPI div 16
 
 
